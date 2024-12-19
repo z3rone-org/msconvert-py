@@ -31,9 +31,10 @@ class MSConvertJob:
         if self.container is not None:
             self.container.remove()
         self.mem_limit = self.next_mem_limit()
+        wine_cmd = f'wine msconvert --{self.out_format} -v -f <(echo {self.file})'
         self.container = self.client.containers.run(
             "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
-            f"wine msconvert --{self.out_format} -v -f {self.file}.lst",
+            f"bash -c '{wine_cmd}'",
             mem_limit=f'{self.mem_limit}g',
             mem_swappiness=0,
             mounts=[docker.types.Mount('/data', self.workdir, type='bind')],
@@ -160,7 +161,7 @@ class MSConvertRunner:
         for j in self.get_failed_jobs():
             if self.can_run_job(j):
                 # Start job
-                print(f'Run {j.file} with {j.next_mem_limit()}G RAM')
+                print(f'Re-run {j.file} with {j.next_mem_limit()}G RAM')
                 j.run()
                 new_run += 1
             elif self.concurrency <= len(self.get_running_jobs()):

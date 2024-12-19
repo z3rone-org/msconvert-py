@@ -7,10 +7,15 @@ requirements = [
     "psutil",
 ]
 
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
+
 setup(
     name='msconvert',
     author="Falk Boudewijn Schimweg",
     author_email='git@falk.schimweg.de',
+    license="GNU Affero General Public License v3 or later (AGPLv3+)",
+    long_description=readme,
     python_requires='>=3.10',
     use_scm_version=True,
     requirements=requirements,

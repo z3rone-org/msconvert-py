@@ -5,6 +5,17 @@ import sys
 
 class MSConvertJob:
     def __init__(self, file, workdir, out_format, mem_limit, client):
+        # Check if image is pulled
+        image_tags = []
+        pwiz_tag = 'chambm/pwiz-skyline-i-agree-to-the-vendor-licenses:latest'
+        for image in client.images.list():
+            image_tags += image.tags
+        if pwiz_tag not in image_tags:
+            print(
+                f'Image {pwiz_tag} not pulled. You need to pull this yourself to avoid license conflicts.',
+                file=sys.stderr
+            )
+            sys.exit(1)
         self.file = file
         self.workdir = workdir
         self.out_format = out_format
@@ -45,6 +56,11 @@ class MSConvertRunner:
         self.client = client
         # Create pending jobs
         self.jobs = []
+        in_files = self.get_input_files()
+        if len(in_files) == 0:
+            ext = self.in_format.lower()
+            print(f'No .{ext}-files found in {self.workdir}')
+            sys.exit(2)
         for f in self.get_input_files():
             self.jobs.append(
                 MSConvertJob(

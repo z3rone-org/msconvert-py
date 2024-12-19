@@ -6,7 +6,18 @@ import argparse
 from pathlib import Path
 
 
-def main(args):
+def main():
+    parser = argparse.ArgumentParser(description='Rescoring crosslinked-peptide identifications.')
+    parser.add_argument('-i', action='store', dest='workdir', help='input path',
+                        default=Path.cwd(), type=str, required=False)
+    parser.add_argument('--input-format', action='store', dest='in_format', help='input format',
+                        default="raw", type=str, required=False)
+    parser.add_argument('--output-format', action='store', dest='out_format', help='output format',
+                        default="mgf", type=str, required=False)
+    parser.add_argument('--concurrency', action='store', dest='concurrency', help='maximum concurrency',
+                        default=os.cpu_count(), type=int, required=False)
+    args = parser.parse_args()
+
     client = docker.from_env()
     workdir = args.workdir
     in_format = args.in_format
@@ -34,14 +45,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Rescoring crosslinked-peptide identifications.')
-    parser.add_argument('-i', action='store', dest='workdir', help='input path',
-                        default=Path.cwd(), type=str, required=False)
-    parser.add_argument('--input-format', action='store', dest='in_format', help='input format',
-                        default="raw", type=str, required=False)
-    parser.add_argument('--output-format', action='store', dest='out_format', help='output format',
-                        default="mgf", type=str, required=False)
-    parser.add_argument('--concurrency', action='store', dest='concurrency', help='maximum concurrency',
-                        default=os.cpu_count(), type=int, required=False)
-    args = parser.parse_args()
-    main(args)
+    main()

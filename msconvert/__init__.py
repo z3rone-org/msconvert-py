@@ -26,8 +26,6 @@ class MSConvertJob:
 
     def run(self):
         self.attempt += 1
-        with open(f'{self.workdir}/{self.file}.lst', 'w') as lstf:
-            lstf.write(self.file)
         if self.container is not None:
             self.container.remove()
         self.mem_limit = self.next_mem_limit()

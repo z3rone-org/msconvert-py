@@ -15,6 +15,7 @@ setup(
     author="Falk Boudewijn Schimweg",
     author_email='git@falk.schimweg.de',
     license="GNU Affero General Public License v3 or later (AGPLv3+)",
+    description="A wrapper for the pwiz/msconvert docker container with memory limits and automatic retry.",
     long_description=readme,
     python_requires='>=3.10',
     use_scm_version=True,

@@ -17,7 +17,7 @@ class MSConvertJob:
             )
             sys.exit(1)
         self.file = file
-        self.workdir = workdir
+        self.workdir = f'{os.path.abspath(workdir)}'
         self.out_format = out_format
         self.mem_limit = mem_limit
         self.container = None

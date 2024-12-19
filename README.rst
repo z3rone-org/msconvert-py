@@ -22,6 +22,12 @@ Install the package via:
 
     pip install msconvert
 
+Pull the docker image:
+
+.. code-block:: bash
+
+    docker pull chambm/pwiz-skyline-i-agree-to-the-vendor-licenses:latest
+
 Run it via:
 
 .. code-block:: bash

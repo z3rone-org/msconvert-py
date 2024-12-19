@@ -42,6 +42,7 @@ def main():
             break
         print(f'pending: {pend}, running: {runn}, failed: {fail}, reserved: {rsvd}G')
         sleep(5)
+    runner.cleanup()
 
 
 if __name__ == "__main__":

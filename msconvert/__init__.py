@@ -46,6 +46,13 @@ class MSConvertJob:
         else:
             return self.mem_limit
 
+    def cleanup(self):
+        if self.container is not None:
+            try:
+                self.container.remove()
+            except Exception as e:
+                pass
+
 
 class MSConvertRunner:
     def __init__(self, workdir, in_format, out_format, client, concurrency=10):
@@ -161,3 +168,7 @@ class MSConvertRunner:
             else:
                 print(f'No resources for {j.file} with {j.next_mem_limit()}G RAM', file=sys.stderr)
         return new_run
+
+    def cleanup(self):
+        for j in self.jobs:
+            j.cleanup()

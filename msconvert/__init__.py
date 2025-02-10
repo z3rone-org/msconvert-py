@@ -32,7 +32,7 @@ class MSConvertJob:
         self.mem_limit = self.next_mem_limit()
         wine_cmd = f'wine msconvert --{self.out_format} -v -f <(echo {self.file})'
         if self.filter is not None:
-            wine_cmd += f' --filter {self.filter}'
+            wine_cmd += f' --filter "{self.filter}"'
         self.container = self.client.containers.run(
             "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
             f"bash -c '{wine_cmd}'",

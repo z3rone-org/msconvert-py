@@ -4,7 +4,7 @@ import psutil
 import sys
 
 class MSConvertJob:
-    def __init__(self, file, workdir, out_format, mem_limit, client):
+    def __init__(self, file, workdir, out_format, mem_limit, client, filter=None):
         # Check if image is pulled
         image_tags = []
         pwiz_tag = 'chambm/pwiz-skyline-i-agree-to-the-vendor-licenses:latest'
@@ -19,6 +19,7 @@ class MSConvertJob:
         self.file = file
         self.workdir = f'{os.path.abspath(workdir)}'
         self.out_format = out_format
+        self.filter = filter
         self.mem_limit = mem_limit
         self.container = None
         self.client = client
@@ -30,6 +31,8 @@ class MSConvertJob:
             self.container.remove()
         self.mem_limit = self.next_mem_limit()
         wine_cmd = f'wine msconvert --{self.out_format} -v -f <(echo {self.file})'
+        if self.filter is not None:
+            wine_cmd += f' --filter {self.filter}'
         self.container = self.client.containers.run(
             "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
             f"bash -c '{wine_cmd}'",
@@ -54,10 +57,11 @@ class MSConvertJob:
 
 
 class MSConvertRunner:
-    def __init__(self, workdir, in_format, out_format, client, concurrency=10):
+    def __init__(self, workdir, in_format, out_format, client, concurrency=10, filter=None):
         self.workdir = workdir
         self.in_format = in_format
         self.out_format = out_format
+        self.filter = filter
         self.concurrency = concurrency
         self.client = client
         # Create pending jobs
@@ -74,7 +78,8 @@ class MSConvertRunner:
                     workdir,
                     self.out_format,
                     3,
-                    self.client
+                    self.client,
+                    filter=filter
                 )
             )
 

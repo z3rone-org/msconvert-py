@@ -16,6 +16,8 @@ def main():
                         default="mgf", type=str, required=False)
     parser.add_argument('--concurrency', action='store', dest='concurrency', help='maximum concurrency',
                         default=os.cpu_count(), type=int, required=False)
+    parser.add_argument('--filter', action='store', dest='filter', help='filter',
+                        default=None, type=str, required=False)
     args = parser.parse_args()
 
     client = docker.from_env()
@@ -23,13 +25,15 @@ def main():
     in_format = args.in_format
     out_format = args.out_format
     concurrency = args.concurrency
+    filter = args.filter
 
     runner = MSConvertRunner(
         workdir,
         in_format=in_format,
         out_format=out_format,
         client=client,
-        concurrency=concurrency
+        concurrency=concurrency,
+        filter=filter,
     )
 
     while True:

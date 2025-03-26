@@ -39,6 +39,11 @@ class MSConvertJob:
             mem_limit=f'{self.mem_limit}g',
             mem_swappiness=0,
             mounts=[docker.types.Mount('/data', self.workdir, type='bind')],
+            volumes={
+                'msconvert-wine': {'bind': '/wineprefix64', 'mode': 'rw'},
+                'msconvert-usr': {'bind': '/usr', 'mode': 'rw'},
+                'msconvert-opt': {'bind': '/opt', 'mode': 'rw'},
+            },
             detach=True,
         )
 

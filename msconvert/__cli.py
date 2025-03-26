@@ -27,6 +27,10 @@ def main():
     concurrency = args.concurrency
     filter = args.filter
 
+    client.volumes.create('msconvert-wine')
+    client.volumes.create('msconvert-usr')
+    client.volumes.create('msconvert-opt')
+
     runner = MSConvertRunner(
         workdir,
         in_format=in_format,

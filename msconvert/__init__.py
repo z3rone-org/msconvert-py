@@ -16,6 +16,40 @@ class MSConvertJob:
                 file=sys.stderr
             )
             sys.exit(1)
+
+        try:
+            client.volumes.get('msconvert-wine')
+        except:
+            client.volumes.create('msconvert-wine')
+            client.containers.run(
+                "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
+                "bash -c 'cp -r /_wineprefix64/* /wineprefix64'",
+                volumes={'msconvert-wine': {'bind': '/_wineprefix64', 'mode': 'rw'}}
+            )
+
+        try:
+            client.volumes.get('msconvert-usr')
+        except:
+            client.volumes.create('msconvert-usr')
+            client.containers.run(
+                "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
+                "bash -c 'cp -r /_usr/* /usr'",
+                volumes={'msconvert-usr': {'bind': '/_usr', 'mode': 'rw'}}
+            )
+
+        try:
+            client.volumes.get('msconvert-opt')
+        except:
+            client.volumes.create('msconvert-opt')
+            client.containers.run(
+                "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
+                "bash -c 'cp -r /_opt/* /opt'",
+                volumes={'msconvert-opt': {'bind': '/_opt', 'mode': 'rw'}}
+            )
+
+        client.volumes.get('msconvert-usr')
+        client.volumes.get('msconvert-opt')
+
         self.file = file
         self.workdir = f'{os.path.abspath(workdir)}'
         self.out_format = out_format

@@ -22,7 +22,11 @@ class MSConvertJob:
         client.volumes.create('msconvert-opt')
         client.containers.run(
             "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
-            "bash -c 'cp -r /wineprefix64/* /_wineprefix64; cp -r /usr/* /_usr;  cp -r /opt/* /_opt'",
+            "bash -c '\
+                rsync -av --size-only /wineprefix64/* /_wineprefix64; \
+                rsync -av --size-only /usr/* /_usr; \
+                rsync -av --size-only /opt/* /_opt \
+            '",
             volumes={
                 'msconvert-wine': {'bind': '/_wineprefix64', 'mode': 'rw'},
                 'msconvert-usr': {'bind': '/_usr', 'mode': 'rw'},

@@ -17,24 +17,6 @@ class MSConvertJob:
             )
             sys.exit(1)
 
-        client.volumes.create('msconvert-wine')
-        client.volumes.create('msconvert-usr')
-        client.volumes.create('msconvert-opt')
-        client.containers.run(
-            "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
-            "bash -c '\
-                cp -rn /wineprefix64/* /_wineprefix64; \
-                cp -rn /usr/* /_usr; \
-                cp -rn /opt/* /_opt \
-            '",
-            volumes={
-                'msconvert-wine': {'bind': '/_wineprefix64', 'mode': 'rw'},
-                'msconvert-usr': {'bind': '/_usr', 'mode': 'rw'},
-                'msconvert-opt': {'bind': '/_opt', 'mode': 'rw'},
-            },
-            remove=True,
-        )
-
         self.file = file
         self.workdir = f'{os.path.abspath(workdir)}'
         self.out_format = out_format
@@ -90,6 +72,25 @@ class MSConvertRunner:
         self.client = client
         # Create pending jobs
         self.jobs = []
+
+        client.volumes.create('msconvert-wine')
+        client.volumes.create('msconvert-usr')
+        client.volumes.create('msconvert-opt')
+        client.containers.run(
+            "chambm/pwiz-skyline-i-agree-to-the-vendor-licenses",
+            "bash -c '\
+                cp -rn /wineprefix64/* /_wineprefix64; \
+                cp -rn /usr/* /_usr; \
+                cp -rn /opt/* /_opt \
+            '",
+            volumes={
+                'msconvert-wine': {'bind': '/_wineprefix64', 'mode': 'rw'},
+                'msconvert-usr': {'bind': '/_usr', 'mode': 'rw'},
+                'msconvert-opt': {'bind': '/_opt', 'mode': 'rw'},
+            },
+            remove=True,
+        )
+
         in_files = self.get_input_files()
         if len(in_files) == 0:
             ext = self.in_format.lower()
